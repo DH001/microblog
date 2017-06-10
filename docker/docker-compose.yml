@@ -1,0 +1,56 @@
+version: '2'
+
+volumes:
+  esdata1:
+    driver: local
+
+services:
+  root:
+    image: .
+
+  spring:
+     image: .
+     extends:
+       service: root
+     environment:
+       SPRING_PROFILES_ACTIVE: default
+       ENV_ARGS: ''
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.4
+    networks:
+      - anatwine
+    environment:
+        - xpack.security.enabled=false
+        - cluster.name=docker-cluster
+        - bootstrap.memory_lock=true
+        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    mem_limit: 1g
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+
+  microblog-rest-services:
+    image: com.forgerock.microblog/microblog-rest-services:1.0
+    networks:
+      - rest-services
+    extends:
+      file: docker-common.yml
+      service: spring
+    ports:
+      - "8080"
+    depends_on:
+      - elasticsearch
+
+networks:
+  rest-services:

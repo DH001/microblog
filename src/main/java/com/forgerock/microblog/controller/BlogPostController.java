@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -54,14 +53,15 @@ public class BlogPostController {
     }
 
     @PostMapping
-    private ResponseEntity createBlogPost(@RequestBody final String blogPostText) {
+    private ResponseEntity createBlogPost(@RequestBody final BlogPost blogPost) {
         // We will accept empty posts as they can be updated later.
 
         final String newId = UUID.randomUUID().toString();
         final BlogPost created = blogPostDao.create(BlogPost.BlogPostBuilder
                 .aBlogPost()
-                .withBody(blogPostText)
-                .withTimestamp(Date.from(Instant.now()))
+                .withBody(blogPost.getBody())
+                .withUserId(blogPost.getUserId())
+                .withTimestamp(new Date())
                 .withId(newId)
                 .build()
         );
@@ -74,8 +74,7 @@ public class BlogPostController {
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity<BlogPost> updateBlogPost(@PathVariable(value = "id") final String id, @RequestBody final String blogPostText) {
-
+    private ResponseEntity<BlogPost> updateBlogPost(@PathVariable(value = "id") final String id, @RequestBody final BlogPost blogPost) {
         if (StringUtils.isEmpty(id == null)) {
             throw new BadRequestException("Missing id field in URL. Usage: /blogposts/{id}");
         }
@@ -83,7 +82,9 @@ public class BlogPostController {
         // Only allow edit of post body
         final BlogPost updated = blogPostDao.update(BlogPost.BlogPostBuilder
                 .aBlogPost()
-                .withBody(blogPostText)
+                .withId(id)
+                // Ignore timestamp and userId by design - we only update the text
+                .withBody(blogPost.getBody())
                 .build()
         );
         LOG.trace("Updated blogpost: {}", updated);
@@ -92,7 +93,6 @@ public class BlogPostController {
 
     @DeleteMapping("/{id}")
     private ResponseEntity<BlogPost> deleteBlogPost(@PathVariable(value = "id") final String id) {
-
         if (StringUtils.isEmpty(id == null)) {
             throw new BadRequestException("Missing id field in URL. Usage: /blogposts/{id}");
         }

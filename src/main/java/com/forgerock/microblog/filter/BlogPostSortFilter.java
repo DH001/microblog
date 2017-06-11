@@ -1,6 +1,5 @@
 package com.forgerock.microblog.filter;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +8,8 @@ import java.util.List;
  */
 public class BlogPostSortFilter implements SortFilter {
 
-    private Instant fromDateTime;
-    private Instant toDateTime;
+    private String fromDateTime;
+    private String toDateTime;
 
     // Paging
     private Integer size;
@@ -23,7 +22,7 @@ public class BlogPostSortFilter implements SortFilter {
     public BlogPostSortFilter() {
     }
 
-    public BlogPostSortFilter(final Instant fromDateTime, final Instant toDateTime, final Integer size, final Integer offset, final List<String> userIds, final List<String> sort) {
+    public BlogPostSortFilter(final String fromDateTime, final String toDateTime, final Integer size, final Integer offset, final List<String> userIds, final List<String> sort) {
         this.fromDateTime = fromDateTime;
         this.toDateTime = toDateTime;
         this.size = size;
@@ -32,19 +31,19 @@ public class BlogPostSortFilter implements SortFilter {
         this.sort = sort;
     }
 
-    public Instant getFromDateTime() {
+    public String getFromDateTime() {
         return fromDateTime;
     }
 
-    public void setFromDateTime(final Instant fromDateTime) {
+    public void setFromDateTime(final String fromDateTime) {
         this.fromDateTime = fromDateTime;
     }
 
-    public Instant getToDateTime() {
+    public String getToDateTime() {
         return toDateTime;
     }
 
-    public void setToDateTime(final Instant toDateTime) {
+    public void setToDateTime(final String toDateTime) {
         this.toDateTime = toDateTime;
     }
 
@@ -73,12 +72,10 @@ public class BlogPostSortFilter implements SortFilter {
     }
 
     public List<String> getSort() {
-
         return sort;
     }
 
     public void setSort(final List<String> sort) {
-
         this.sort = sort;
     }
 }

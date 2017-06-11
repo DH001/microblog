@@ -44,10 +44,9 @@ public interface ICrudDao<T, K> {
     T update(T resourceToUpdate) throws NotFoundException;
 
     /**
-     * Delete reosurce with specified id
+     * Delete resource with specified id. If id does not exist method does nothing and is therefore idempotent.
      *
      * @param id Unique id
-     * @throws NotFoundException No resource with this id could be found
      */
     void delete(String id) throws NotFoundException;
 

@@ -32,9 +32,9 @@ public class BlogPostDao extends AbstractElasticsearchDao implements ICrudDao<Bl
 
     @Override
     public Optional<BlogPost> getById(final String id) {
-
         Preconditions.checkNotNull(id, "id cannot be null");
-        Optional<GetResponse> resp = super.findById(id);//.getSourceAsString();
+
+        Optional<GetResponse> resp = super.findById(id);
         if (!resp.isPresent() || StringUtils.isEmpty(resp.get().getSourceAsString())) {
             return Optional.empty();
         }
@@ -45,7 +45,6 @@ public class BlogPostDao extends AbstractElasticsearchDao implements ICrudDao<Bl
 
     @Override
     public List<BlogPost> getAll(final BlogPostSortFilter sortFilter) {
-
         Preconditions.checkNotNull(sortFilter, "sortFilter cannot be null");
 
         Optional<SearchResponse> resp = findAll(sortFilter.getOffset(), sortFilter.getSize(),
@@ -60,6 +59,55 @@ public class BlogPostDao extends AbstractElasticsearchDao implements ICrudDao<Bl
         return results;
     }
 
+    private SortBuilder aSortBuilder(final SortColumn sortColumn) {
+
+        final org.elasticsearch.search.sort.SortBuilder sortBuilder;
+        if (sortColumn.getColumn().equals("userId")) {
+            // Fix for text value sorting - would need to use mapping properties to handle String fields correctly in a complete solution but quick fix for now.
+            sortBuilder = new FieldSortBuilder(sortColumn.getColumn() + ".keyword");
+        }
+        else {
+            sortBuilder = new FieldSortBuilder(sortColumn.getColumn());
+        }
+
+        sortBuilder.order(SortOrder.valueOf(sortColumn.getDirection().name()));
+        return sortBuilder;
+    }
+
+    @Override
+    public BlogPost create(final BlogPost resourceToCreate) {
+
+        super.createNewDocument(resourceToCreate.getId(), GSON.toJson(resourceToCreate));
+        return resourceToCreate;
+    }
+
+    @Override
+    public BlogPost update(final BlogPost resourceToUpdate) throws NotFoundException {
+
+        super.updateDocument(resourceToUpdate.getId(), GSON.toJson(resourceToUpdate));
+        return getById(resourceToUpdate.getId()).orElseThrow(NotFoundException::new);
+    }
+
+    @Override
+    public void delete(final String id) {
+
+        Preconditions.checkNotNull(id, "id cannot be null");
+        deleteById(id);
+    }
+
+    @Override
+    protected String getIndex() {
+
+        return "microblog";
+    }
+
+    @Override
+    protected String getType() {
+
+        return "blogpost";
+    }
+
+    // Could be refactored into separate builders if more REST services required filters and sorts
     private QueryBuilder getQueryBuilder(BlogPostSortFilter filter) {
 
         BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
@@ -85,47 +133,10 @@ public class BlogPostDao extends AbstractElasticsearchDao implements ICrudDao<Bl
     }
 
     private List<SortBuilder> getSortBuilders(final BlogPostSortFilter sortFilter) {
-
         if (sortFilter.getSort() == null || sortFilter.getSort().isEmpty()) {
             return Collections.emptyList();
         }
 
         return sortFilter.getSort().stream().map(SortColumn::parse).map(this::aSortBuilder).collect(Collectors.toList());
-    }
-
-    private SortBuilder aSortBuilder(final SortColumn sortColumn) {
-
-        final org.elasticsearch.search.sort.SortBuilder sortBuilder = new FieldSortBuilder(sortColumn.getColumn());
-        sortBuilder.order(SortOrder.valueOf(sortColumn.getDirection().name()));
-        return sortBuilder;
-    }
-
-    @Override
-    public BlogPost create(final BlogPost resourceToCreate) {
-
-        return null;
-    }
-
-    @Override
-    public BlogPost update(final BlogPost resourceToUpdate) throws NotFoundException {
-
-        return null;
-    }
-
-    @Override
-    public void delete(final String id) throws NotFoundException {
-
-    }
-
-    @Override
-    protected String getIndex() {
-
-        return "microblog";
-    }
-
-    @Override
-    protected String getType() {
-
-        return "blogpost";
     }
 }

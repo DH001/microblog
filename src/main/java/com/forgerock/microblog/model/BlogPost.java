@@ -13,47 +13,41 @@ public class BlogPost {
     private String id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateTimeConstants.ISO_OFFSET_DATE_TIME)
-    private Date timestamp;
+    private Date timestamp; // Note using date for simplicity (doesn't require extra handling for Elasticsearch) - but could use Java 8 Instant
 
     private String body;
 
     private String userId;
 
-    public BlogPost(final Date timestamp, final String body) {
-
-        this.timestamp = timestamp;
-        this.body = body;
+    /**
+     * Required by Spring
+     */
+    public BlogPost() {
     }
 
     public BlogPost(final Date timestamp, final String body, final String userId) {
-
         this.timestamp = timestamp;
         this.body = body;
         this.userId = userId;
     }
 
     public String getId() {
-
         return id;
     }
 
     public Date getTimestamp() {
-
         return timestamp;
     }
 
     public String getBody() {
-
         return body;
     }
 
     public String getUserId() {
-
         return userId;
     }
 
     public static final class BlogPostBuilder {
-
         private String id;
         private Date timestamp;
         private String body;

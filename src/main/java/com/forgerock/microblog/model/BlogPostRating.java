@@ -5,6 +5,7 @@ package com.forgerock.microblog.model;
  */
 public class BlogPostRating {
 
+    // TODO Could be yml config value
     // Highest score for a post
     public static final int MAX_RATING = 5;
     // Lowest score for a post
@@ -19,18 +20,16 @@ public class BlogPostRating {
     private String userId;
 
     public BlogPostRating(final String id, final String blogPostId, final int rating, final String userId) {
-
         this.id = id;
         this.blogPostId = blogPostId;
         this.rating = rating;
         this.userId = userId;
     }
 
-    public BlogPostRating(final String id, final String blogPostId, final int rating) {
-
-        this.id = id;
-        this.blogPostId = blogPostId;
-        this.rating = rating;
+    /**
+     * Required by Spring
+     */
+    public BlogPostRating() {
     }
 
     public String getId() {

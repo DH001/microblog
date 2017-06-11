@@ -1,11 +1,14 @@
 package com.forgerock.microblog.es;
 
+import com.forgerock.microblog.DateTimeConstants;
+import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.IndexNotFoundException;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
@@ -24,18 +27,17 @@ public abstract class AbstractElasticsearchDao {
     // TODO Could be yml config value
     private static int ES_MAX_SIZE = 10000; // Maximum allowed size with default ES install
 
-
     private final static Logger LOG = LoggerFactory.getLogger(AbstractElasticsearchDao.class);
 
     // For turning results into model objects
     protected static final Gson GSON = new GsonBuilder()
-            .serializeNulls()
+            .setDateFormat(DateTimeConstants.ISO_OFFSET_DATE_TIME)
             .create();
 
     @Autowired
     private ElasticsearchClientFactory elasticsearchClientFactory;
 
-    public Optional<GetResponse> findById(final String id) {
+    protected Optional<GetResponse> findById(final String id) {
 
         LOG.debug("About to GET /{}/{}/{}", getIndex(), getType(), id);
         try {
@@ -50,6 +52,45 @@ public abstract class AbstractElasticsearchDao {
             LOG.warn("No data created yet for index: {}. Index will be created when new data is posted.", getIndex());
             return Optional.empty();
         }
+    }
+
+    protected void deleteById(final String id) {
+
+        LOG.debug("About to DELETE /{}/{}/{}", getIndex(), getType(), id);
+        try {
+            elasticsearchClientFactory.getClient()
+                    .prepareDelete(getIndex(), getType(), id)
+                    .get();
+        }
+        catch (IndexNotFoundException indexNotFoundException) {
+            // No data created yet in ES. Ignore.
+            LOG.warn("No data created yet for index: {}. Index will be created when new data is posted.", getIndex());
+        }
+    }
+
+    protected String createNewDocument(final String id, final String json) {
+
+        Preconditions.checkNotNull(id, "id cannot be null");
+        Preconditions.checkNotNull(json, "json cannot be null");
+
+        LOG.debug("About to PUT /{}/{}/{}", getIndex(), getType(), id);
+        return elasticsearchClientFactory.getClient()
+                .prepareIndex(getIndex(), getType(), id)
+                .setSource(json, XContentType.JSON)
+                .get()
+                .getId();
+    }
+
+    protected void updateDocument(final String id, final String json) {
+
+        Preconditions.checkNotNull(id, "id cannot be null");
+        Preconditions.checkNotNull(json, "json cannot be null");
+
+        LOG.debug("About to PUT /{}/{}/{}", getIndex(), getType(), id);
+        elasticsearchClientFactory.getClient()
+                .prepareUpdate(getIndex(), getType(), id)
+                .setDoc(json, XContentType.JSON)
+                .get();
     }
 
     /**
@@ -103,18 +144,18 @@ public abstract class AbstractElasticsearchDao {
 
     }
 
+    /**
+     * Index name
+     */
     protected abstract String getIndex();
 
+    /** Type name */
     protected abstract String getType();
 
     /**
-     * Override is needed
-     *
+     * Override if different search type is needed for special case
      * @return Search type
      */
-    protected SearchType getSearchType() {
-
-        return SearchType.DFS_QUERY_THEN_FETCH;
-    }
+    SearchType getSearchType() {return SearchType.DFS_QUERY_THEN_FETCH;}
 
 }

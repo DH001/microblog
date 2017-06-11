@@ -3,7 +3,7 @@ package com.forgerock.microblog.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.forgerock.microblog.DateTimeConstants;
 
-import java.time.Instant;
+import java.util.Date;
 
 /**
  * A single post on the blog at a specific point in time with textual content and an optional user id.
@@ -13,19 +13,19 @@ public class BlogPost {
     private String id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateTimeConstants.ISO_OFFSET_DATE_TIME)
-    private Instant timestamp;
+    private Date timestamp;
 
     private String body;
 
     private String userId;
 
-    public BlogPost(final Instant timestamp, final String body) {
+    public BlogPost(final Date timestamp, final String body) {
 
         this.timestamp = timestamp;
         this.body = body;
     }
 
-    public BlogPost(final Instant timestamp, final String body, final String userId) {
+    public BlogPost(final Date timestamp, final String body, final String userId) {
 
         this.timestamp = timestamp;
         this.body = body;
@@ -37,7 +37,7 @@ public class BlogPost {
         return id;
     }
 
-    public Instant getTimestamp() {
+    public Date getTimestamp() {
 
         return timestamp;
     }
@@ -55,7 +55,7 @@ public class BlogPost {
     public static final class BlogPostBuilder {
 
         private String id;
-        private Instant timestamp;
+        private Date timestamp;
         private String body;
         private String userId;
 
@@ -69,20 +69,17 @@ public class BlogPost {
             return this;
         }
 
-        public BlogPostBuilder withTimestamp(Instant timestamp) {
-
+        public BlogPostBuilder withTimestamp(Date timestamp) {
             this.timestamp = timestamp;
             return this;
         }
 
         public BlogPostBuilder withBody(String body) {
-
             this.body = body;
             return this;
         }
 
         public BlogPostBuilder withUserId(String userId) {
-
             this.userId = userId;
             return this;
         }

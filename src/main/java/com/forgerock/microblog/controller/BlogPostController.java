@@ -15,6 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -60,7 +61,7 @@ public class BlogPostController {
         final BlogPost created = blogPostDao.create(BlogPost.BlogPostBuilder
                 .aBlogPost()
                 .withBody(blogPostText)
-                .withTimestamp(Instant.now())
+                .withTimestamp(Date.from(Instant.now()))
                 .withId(newId)
                 .build()
         );

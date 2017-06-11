@@ -14,8 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.time.Instant;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +35,7 @@ public class BlogPostControllerTest {
     @Test
     public void testGetAllPosts_returnList() throws Exception {
         // Setup data and mock
-        Instant now = Instant.now();
+        Date now = new Date();
         final List<BlogPost> blogPostList = Arrays.asList(
                 BlogPost.BlogPostBuilder.aBlogPost().withBody("Text1").withId("1").withTimestamp(now).withUserId("user1").build(),
                 BlogPost.BlogPostBuilder.aBlogPost().withBody("Text2").withId("2").withTimestamp(now).withUserId("user2").build()
@@ -56,7 +56,7 @@ public class BlogPostControllerTest {
     @Test
     public void testGetPostsById_returnSpecificPost() throws Exception {
         // Setup data and mock
-        Instant now = Instant.now();
+        Date now = new Date();
         final BlogPost blogPost = BlogPost.BlogPostBuilder.aBlogPost().withBody("Text1").withId("1").withTimestamp(now).withUserId("user1").build();
 
         Mockito.when(dao.getById(Mockito.eq("1"))).thenReturn(Optional.of(blogPost));
@@ -82,7 +82,7 @@ public class BlogPostControllerTest {
     @Test
     public void testCreateBLogPost_success_return201() throws Exception {
 
-        Instant now = Instant.now();
+        Date now = new Date();
         final BlogPost blogPost = BlogPost.BlogPostBuilder.aBlogPost().withBody("New Post Text").withId("1").withTimestamp(now).withUserId("user1").build();
         Mockito.when(dao.create(Mockito.any())).thenReturn(blogPost);
 
@@ -96,7 +96,7 @@ public class BlogPostControllerTest {
     @Test
     public void testUpdateBlogPost_success_return200() throws Exception {
 
-        Instant now = Instant.now();
+        Date now = new Date();
         final BlogPost blogPost = BlogPost.BlogPostBuilder.aBlogPost().withBody("New Post Text").withId("1").withTimestamp(now).withUserId("user1").build();
         Mockito.when(dao.update(Mockito.any())).thenReturn(blogPost);
 

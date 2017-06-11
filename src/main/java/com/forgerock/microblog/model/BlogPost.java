@@ -1,7 +1,6 @@
 package com.forgerock.microblog.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.forgerock.microblog.DateTimeConstants;
 
 import java.util.Date;
 

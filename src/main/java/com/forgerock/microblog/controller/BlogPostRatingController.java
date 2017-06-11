@@ -29,13 +29,11 @@ public class BlogPostRatingController {
 
     @Autowired
     public BlogPostRatingController(BlogPostRatingDao blogPostRatingDao) {
-
         this.blogPostRatingDao = blogPostRatingDao;
     }
 
-
     @GetMapping(REST_URL)
-    private List<BlogPostRating> getAllRatingsForBlogPost(@PathVariable(value = "id") final String id) {
+    public List<BlogPostRating> getAllRatingsForBlogPost(@PathVariable(value = "id") final String id) {
 
         if (StringUtils.isEmpty(id == null)) {
             throw new BadRequestException("Missing id field in URL. Usage: " + REST_URL);
@@ -44,7 +42,7 @@ public class BlogPostRatingController {
     }
 
     @PostMapping(REST_URL)
-    private ResponseEntity submitRatingForBlogPost(@RequestBody final BlogPostRating blogPostRating, @PathVariable(value = "id") String blogPostId) {
+    public ResponseEntity submitRatingForBlogPost(@RequestBody final BlogPostRating blogPostRating, @PathVariable(value = "id") String blogPostId) {
 
         if (blogPostRating.getRating() > BlogPostRating.MAX_RATING || blogPostRating.getRating() < BlogPostRating.MIN_RATING) {
             // Note: Could use JSR-303 bean validation if more complex objects and validation were required but keeping it simple for now.

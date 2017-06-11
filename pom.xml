@@ -34,6 +34,7 @@
         <version.validation-api>1.1.0.Final</version.validation-api>
         <version.javax.interceptor>1.0.0.Final</version.javax.interceptor>
         <version.gson>2.5</version.gson>
+        <version.guava>21.0</version.guava>
 
         <!-- Docker -->
         <version.docker-maven-plugin>0.4.13</version.docker-maven-plugin>
@@ -43,31 +44,6 @@
     </properties>
 
     <dependencies>
-        <!--<dependency>-->
-        <!--<groupId>org.springframework</groupId>-->
-        <!--<artifactId>spring-core</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework</groupId>-->
-        <!--<artifactId>spring-beans</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework</groupId>-->
-        <!--<artifactId>spring-context</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework</groupId>-->
-        <!--<artifactId>spring-web</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework</groupId>-->
-        <!--<artifactId>spring-aop</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework</groupId>-->
-        <!--<artifactId>spring-webmvc</artifactId>-->
-        <!--</dependency>-->
-
         <!-- Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -78,20 +54,6 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- Spring Security -->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.security</groupId>-->
-        <!--<artifactId>spring-security-core</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.security</groupId>-->
-        <!--<artifactId>spring-security-config</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.security</groupId>-->
-        <!--<artifactId>spring-security-web</artifactId>-->
-        <!--</dependency>-->
-
         <!-- Application monitoring - see http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-application-info -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -100,11 +62,11 @@
         </dependency>
 
         <!-- Third part utilities -->
-        <!--<dependency>-->
-        <!--<groupId>com.google.guava</groupId>-->
-        <!--<artifactId>guava</artifactId>-->
-        <!--<version>21.0</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${version.guava}</version>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -121,18 +83,6 @@
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
         </dependency>
-
-        <!-- Model bean validation -->
-        <!--<dependency>-->
-        <!--<groupId>javax.validation</groupId>-->
-        <!--<artifactId>validation-api</artifactId>-->
-        <!--<version>${version.validation-api}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.jboss.spec.javax.interceptor</groupId>-->
-        <!--<artifactId>jboss-interceptors-api_1.2_spec</artifactId>-->
-        <!--<version>${version.javax.interceptor}</version>-->
-        <!--</dependency>-->
 
         <!-- Swagger APIs -->
         <dependency>
@@ -215,27 +165,27 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>junit</groupId>-->
-        <!--<artifactId>junit</artifactId>-->
-        <!--<scope>test</scope>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.mockito</groupId>-->
-        <!--<artifactId>mockito-all</artifactId>-->
-        <!--<version>1.10.19</version>-->
-        <!--<scope>test</scope>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.hamcrest</groupId>-->
-        <!--<artifactId>hamcrest-core</artifactId>-->
-        <!--<scope>test</scope>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.hamcrest</groupId>-->
-        <!--<artifactId>hamcrest-library</artifactId>-->
-        <!--<scope>test</scope>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.10.19</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -314,51 +264,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- TODO -->
-            <!--<plugin>-->
-            <!--<groupId>org.codehaus.mojo</groupId>-->
-            <!--<artifactId>findbugs-maven-plugin</artifactId>-->
-            <!--<version>3.0.4</version>-->
-            <!--<configuration>-->
-            <!--<plugins>-->
-            <!--<groupId>jp.skypencil.findbugs.slf4j</groupId>-->
-            <!--<artifactId>bug-pattern</artifactId>-->
-            <!--<version>1.2.4</version>-->
-            <!--</plugins>-->
-            <!--</configuration>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>analyze-compile</id>-->
-            <!--<phase>compile</phase>-->
-            <!--<goals>-->
-            <!--<goal>check</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
-
-            <!-- TODO -->
-            <!--<plugin>-->
-            <!--<groupId>org.apache.maven.plugins</groupId>-->
-            <!--<artifactId>maven-dependency-plugin</artifactId>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>analyze</id>-->
-            <!--<goals>-->
-            <!--<goal>analyze-only</goal>-->
-            <!--</goals>-->
-            <!--<configuration>-->
-            <!--<failOnWarning>true</failOnWarning>-->
-            <!--<ignoreNonCompile>true</ignoreNonCompile>-->
-            <!--<ignoredDependencies>-->
-            <!--<dependency>org.springframework.boot:spring-boot-starter-web</dependency>-->
-            <!--<dependency>org.springframework.security:spring-security-web</dependency>-->
-            <!--</ignoredDependencies>-->
-            <!--</configuration>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
 
         </plugins>
     </build>

@@ -1,4 +1,4 @@
-package com.forgerock.microblog;
+package com.forgerock.microblog.model;
 
 /**
  * Hold constant values for date times

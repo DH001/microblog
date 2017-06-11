@@ -37,12 +37,12 @@ public class BlogPostController {
     }
 
     @GetMapping
-    private List<BlogPost> getAll(BlogPostSortFilter blogPostSortFilter) {
+    public List<BlogPost> getAll(BlogPostSortFilter blogPostSortFilter) {
         return blogPostDao.getAll(blogPostSortFilter);
     }
 
     @GetMapping("/{id}")
-    private BlogPost getBlogPost(@PathVariable(value = "id") final String id) {
+    public BlogPost getBlogPost(@PathVariable(value = "id") final String id) {
 
         if (StringUtils.isEmpty(id == null)) {
             throw new BadRequestException("Missing id field in URL. Usage: /blogposts/{id}");
@@ -53,7 +53,7 @@ public class BlogPostController {
     }
 
     @PostMapping
-    private ResponseEntity createBlogPost(@RequestBody final BlogPost blogPost) {
+    public ResponseEntity createBlogPost(@RequestBody final BlogPost blogPost) {
         // We will accept empty posts as they can be updated later.
 
         final String newId = UUID.randomUUID().toString();
@@ -74,7 +74,7 @@ public class BlogPostController {
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity<BlogPost> updateBlogPost(@PathVariable(value = "id") final String id, @RequestBody final BlogPost blogPost) {
+    public ResponseEntity<BlogPost> updateBlogPost(@PathVariable(value = "id") final String id, @RequestBody final BlogPost blogPost) {
         if (StringUtils.isEmpty(id == null)) {
             throw new BadRequestException("Missing id field in URL. Usage: /blogposts/{id}");
         }
@@ -92,7 +92,7 @@ public class BlogPostController {
     }
 
     @DeleteMapping("/{id}")
-    private ResponseEntity<BlogPost> deleteBlogPost(@PathVariable(value = "id") final String id) {
+    public ResponseEntity<BlogPost> deleteBlogPost(@PathVariable(value = "id") final String id) {
         if (StringUtils.isEmpty(id == null)) {
             throw new BadRequestException("Missing id field in URL. Usage: /blogposts/{id}");
         }

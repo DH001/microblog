@@ -1,0 +1,22 @@
+# Use diagnostic endpoints
+endpoints:
+  enabled: true
+management:
+  security:
+    enabled: false
+  health:
+    defaults:
+      enabled: true
+
+logging:
+  level:
+    io.netty: INFO
+    org.springframework: WARN
+    org.elasticsearch: INFO
+    com.mangofactory.swagger: ERROR
+    com.forgerock: DEBUG
+    springfox.documentation.spring.web.readers.operation: ERROR
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread]  %logger{36}: %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36}: %msg%n"
+  file: /tmp/application.log

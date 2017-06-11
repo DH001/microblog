@@ -8,33 +8,36 @@
     <artifactId>microblog</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <!-- Using Spring Boot for REST Services -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.4.2.RELEASE</version>
+        <version>1.5.2.RELEASE</version>
     </parent>
 
     <properties>
+        <!-- Java Version -->
         <java.version>1.8</java.version>
-        <!--<maven.compiler.source>1.8</maven.compiler.source>-->
-        <!--<maven.compiler.target>1.8</maven.compiler.target>-->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
 
-        <!--<version.gson>2.5</version.gson>-->
-        <!--<version.slf4j-api>1.7.12</version.slf4j-api>-->
-        <!--<version.elasticsearch>5.4.1</version.elasticsearch>-->
-        <!--<version.apache.logging.log4j>2.7</version.apache.logging.log4j>-->
-        <!--<version.apache.tomcat.embed>8.5.6</version.apache.tomcat.embed>-->
-        <!--<version.apache.lucene>6.3.0</version.apache.lucene>-->
-        <!--<version.apache.httpcomponents>4.4.5</version.apache.httpcomponents>-->
-        <!--<version.springfox>2.6.1</version.springfox>-->
-        <!--<version.slf4j-log4j12>1.7.12</version.slf4j-log4j12>-->
-        <!--<version.validation-api>1.1.0.Final</version.validation-api>-->
-        <!--<version.javax.interceptor>1.0.0.Final</version.javax.interceptor>-->
+        <!-- Lib Versions -->
+        <version.gson>2.5</version.gson>
+        <version.slf4j-api>1.7.12</version.slf4j-api>
+        <version.elasticsearch>5.4.1</version.elasticsearch>
+        <version.apache.logging.log4j>2.7</version.apache.logging.log4j>
+        <version.apache.tomcat.embed>8.5.6</version.apache.tomcat.embed>
+        <version.apache.lucene>6.3.0</version.apache.lucene>
+        <version.apache.httpcomponents>4.4.5</version.apache.httpcomponents>
+        <version.springfox>2.6.1</version.springfox>
+        <version.slf4j-log4j12>1.7.12</version.slf4j-log4j12>
+        <version.validation-api>1.1.0.Final</version.validation-api>
+        <version.javax.interceptor>1.0.0.Final</version.javax.interceptor>
 
-        <!--&lt;!&ndash; Docker &ndash;&gt;-->
-        <!--<version.docker-maven-plugin>0.4.13</version.docker-maven-plugin>-->
-        <!--<docker.image.prefix>microblog</docker.image.prefix>-->
-        <!--<docker.image.name>${docker.image.prefix}/microblog-rest-services</docker.image.name>-->
+        <!-- Docker -->
+        <version.docker-maven-plugin>0.4.13</version.docker-maven-plugin>
+        <docker.image.prefix>microblog</docker.image.prefix>
+        <docker.image.name>${docker.image.prefix}/microblog-rest-services</docker.image.name>
 
     </properties>
 
@@ -63,15 +66,18 @@
         <!--<groupId>org.springframework</groupId>-->
         <!--<artifactId>spring-webmvc</artifactId>-->
         <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.boot</groupId>-->
-        <!--<artifactId>spring-boot-autoconfigure</artifactId>-->
-        <!--</dependency>-->
+
+        <!-- Spring Boot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- Spring Security -->
         <!--<dependency>-->
         <!--<groupId>org.springframework.security</groupId>-->
         <!--<artifactId>spring-security-core</artifactId>-->
@@ -86,27 +92,31 @@
         <!--</dependency>-->
 
         <!-- Application monitoring - see http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-application-info -->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.boot</groupId>-->
-        <!--<artifactId>spring-boot-starter-actuator</artifactId>-->
-        <!--<scope>runtime</scope>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
+        <!-- Third part utilities -->
         <!--<dependency>-->
         <!--<groupId>com.google.guava</groupId>-->
         <!--<artifactId>guava</artifactId>-->
         <!--<version>21.0</version>-->
         <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.slf4j</groupId>-->
-        <!--<artifactId>slf4j-api</artifactId>-->
-        <!--<version>${version.slf4j-api}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.aspectj</groupId>-->
-        <!--<artifactId>aspectjweaver</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${version.slf4j-api}</version>
+        </dependency>
 
+        <!-- Annotation interception - e.g. Controller logging -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+        </dependency>
+
+        <!-- Model bean validation -->
         <!--<dependency>-->
         <!--<groupId>javax.validation</groupId>-->
         <!--<artifactId>validation-api</artifactId>-->
@@ -118,35 +128,35 @@
         <!--<version>${version.javax.interceptor}</version>-->
         <!--</dependency>-->
 
-        <!-- Swagger -->
-        <!--<dependency>-->
-        <!--<groupId>io.springfox</groupId>-->
-        <!--<artifactId>springfox-swagger2</artifactId>-->
-        <!--<version>${version.springfox}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>io.springfox</groupId>-->
-        <!--<artifactId>springfox-core</artifactId>-->
-        <!--<version>${version.springfox}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>io.springfox</groupId>-->
-        <!--<artifactId>springfox-spi</artifactId>-->
-        <!--<version>${version.springfox}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>io.springfox</groupId>-->
-        <!--<artifactId>springfox-spring-web</artifactId>-->
-        <!--<version>${version.springfox}</version>-->
-        <!--</dependency>-->
+        <!-- Swagger APIs -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${version.springfox}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-core</artifactId>
+            <version>${version.springfox}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-spi</artifactId>
+            <version>${version.springfox}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-spring-web</artifactId>
+            <version>${version.springfox}</version>
+        </dependency>
 
         <!-- Swagger UI : /swagger-ui.html -->
-        <!--<dependency>-->
-        <!--<groupId>io.springfox</groupId>-->
-        <!--<artifactId>springfox-swagger-ui</artifactId>-->
-        <!--<version>${version.springfox}</version>-->
-        <!--<scope>runtime</scope>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${version.springfox}</version>
+            <scope>runtime</scope>
+        </dependency>
 
 
         <!-- Elasticsearch Dependencies -->
@@ -223,79 +233,80 @@
     </dependencies>
 
     <build>
-        <!--<pluginManagement>-->
-        <!--<plugins>-->
-        <!--<plugin>-->
-        <!--<groupId>com.spotify</groupId>-->
-        <!--<artifactId>docker-maven-plugin</artifactId>-->
-        <!--<version>${version.docker-maven-plugin}</version>-->
-        <!--<configuration>-->
-        <!--<imageName>${docker.image.name}</imageName>-->
-        <!--<pullOnBuild>false</pullOnBuild>-->
-        <!--<useConfigFile>true</useConfigFile>-->
-        <!--<dockerDirectory>${project.basedir}/src/main/resources/docker</dockerDirectory>-->
-        <!--<imageTags>-->
-        <!--<imageTag>${project.version}</imageTag>-->
-        <!--</imageTags>-->
-        <!--<resources>-->
-        <!--<resource>-->
-        <!--<directory>${project.build.directory}</directory>-->
-        <!--<includes>-->
-        <!--<include>${project.artifactId}-${project.version}.jar</include>-->
-        <!--</includes>-->
-        <!--</resource>-->
-        <!--</resources>-->
-        <!--</configuration>-->
-        <!--<executions>-->
-        <!--<execution>-->
-        <!--<id>build-image</id>-->
-        <!--<phase>install</phase>-->
-        <!--<goals>-->
-        <!--<goal>build</goal>-->
-        <!--</goals>-->
-        <!--</execution>-->
-        <!--</executions>-->
-        <!--</plugin>-->
-        <!--</plugins>-->
-        <!--</pluginManagement>-->
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.spotify</groupId>
+                    <artifactId>docker-maven-plugin</artifactId>
+                    <version>${version.docker-maven-plugin}</version>
+                    <configuration>
+                        <imageName>${docker.image.name}</imageName>
+                        <pullOnBuild>false</pullOnBuild>
+                        <useConfigFile>true</useConfigFile>
+                        <dockerDirectory>${project.basedir}/src/main/resources/docker</dockerDirectory>
+                        <imageTags>
+                            <imageTag>${project.version}</imageTag>
+                        </imageTags>
+                        <resources>
+                            <resource>
+                                <directory>${project.build.directory}</directory>
+                                <includes>
+                                    <include>${project.artifactId}-${project.version}.jar</include>
+                                </includes>
+                            </resource>
+                        </resources>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>build-image</id>
+                            <phase>install</phase>
+                            <goals>
+                                <goal>build</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
 
         <plugins>
-            <!--<plugin>-->
-            <!--<groupId>com.spotify</groupId>-->
-            <!--<artifactId>docker-maven-plugin</artifactId>-->
-            <!--<version>0.4.11</version>-->
-            <!--<configuration>-->
-            <!--<imageName>${docker.image.prefix}/${project.artifactId}</imageName>-->
-            <!--<dockerDirectory>${project.basedir}/src/main/resources/docker</dockerDirectory>-->
-            <!--<resources>-->
-            <!--<resource>-->
-            <!--<directory>${project.build.directory}</directory>-->
-            <!--<includes>-->
-            <!--<include>${project.artifactId}-${project.version}.jar</include>-->
-            <!--</includes>-->
-            <!--</resource>-->
-            <!--</resources>-->
-            <!--</configuration>-->
-            <!--</plugin>-->
+
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.4.11</version>
+                <configuration>
+                    <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+                    <dockerDirectory>${project.basedir}/src/main/resources/docker</dockerDirectory>
+                    <resources>
+                        <resource>
+                            <directory>${project.build.directory}</directory>
+                            <includes>
+                                <include>${project.artifactId}-${project.version}.jar</include>
+                            </includes>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
 
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <!--<executions>-->
-                <!--<execution>-->
-                <!--<goals>-->
-                <!--<goal>build-info</goal>-->
-                <!--</goals>-->
-                <!--<configuration>-->
-                <!--<additionalProperties>-->
-                <!--<encoding.source>UTF-8</encoding.source>-->
-                <!--<encoding.reporting>UTF-8</encoding.reporting>-->
-                <!--<java.source>${maven.compiler.source}</java.source>-->
-                <!--<java.target>${maven.compiler.target}</java.target>-->
-                <!--</additionalProperties>-->
-                <!--</configuration>-->
-                <!--</execution>-->
-                <!--</executions>-->
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                        <configuration>
+                            <additionalProperties>
+                                <encoding.source>UTF-8</encoding.source>
+                                <encoding.reporting>UTF-8</encoding.reporting>
+                                <java.source>${maven.compiler.source}</java.source>
+                                <java.target>${maven.compiler.target}</java.target>
+                            </additionalProperties>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- TODO -->
@@ -347,45 +358,45 @@
     </build>
 
     <profiles>
-        <!--<profile>-->
-        <!--<id>docker</id>-->
-        <!--<build>-->
-        <!--<plugins>-->
-        <!--<plugin>-->
-        <!--<groupId>com.spotify</groupId>-->
-        <!--<artifactId>docker-maven-plugin</artifactId>-->
-        <!--<version>${version.docker-maven-plugin}</version>-->
-        <!--<configuration>-->
-        <!--<imageName>${docker.image.name}</imageName>-->
-        <!--&lt;!&ndash;<registryUrl>${docker.image.prefix}</registryUrl>&ndash;&gt;-->
-        <!--&lt;!&ndash;<pullOnBuild>true</pullOnBuild>&ndash;&gt;-->
-        <!--<useConfigFile>true</useConfigFile>-->
-        <!--<dockerDirectory>${project.basedir}/src/main/resources/docker</dockerDirectory>-->
-        <!--<imageTags>-->
-        <!--<imageTag>${project.version}</imageTag>-->
-        <!--</imageTags>-->
-        <!--<resources>-->
-        <!--<resource>-->
-        <!--<directory>${project.build.directory}</directory>-->
-        <!--<includes>-->
-        <!--<include>${project.artifactId}-${project.version}.jar</include>-->
-        <!--</includes>-->
-        <!--</resource>-->
-        <!--</resources>-->
-        <!--</configuration>-->
-        <!--<executions>-->
-        <!--<execution>-->
-        <!--<id>build-image</id>-->
-        <!--<phase>install</phase>-->
-        <!--<goals>-->
-        <!--<goal>build</goal>-->
-        <!--</goals>-->
-        <!--</execution>-->
-        <!--</executions>-->
-        <!--</plugin>-->
-        <!--</plugins>-->
-        <!--</build>-->
-        <!--</profile>-->
+        <profile>
+            <id>docker</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.spotify</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <version>${version.docker-maven-plugin}</version>
+                        <configuration>
+                            <imageName>${docker.image.name}</imageName>
+                            <registryUrl>${docker.image.prefix}</registryUrl>
+                            <pullOnBuild>true</pullOnBuild>
+                            <useConfigFile>true</useConfigFile>
+                            <dockerDirectory>${project.basedir}/src/main/resources/docker</dockerDirectory>
+                            <imageTags>
+                                <imageTag>${project.version}</imageTag>
+                            </imageTags>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}</directory>
+                                    <includes>
+                                        <include>${project.artifactId}-${project.version}.jar</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>build-image</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
 

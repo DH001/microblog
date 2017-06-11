@@ -73,7 +73,7 @@ public class BlogPostRatingControllerTest {
 
         // Do test
         this.mockMvc.perform(post("/blogposts/1/ratings")
-                .content(new Gson().toJson(5))
+                .content(new Gson().toJson(rating))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }

@@ -80,15 +80,14 @@ public class BlogPostControllerTest {
     }
 
     @Test
-    public void testCreateBLogPost_success_return201() throws Exception {
+    public void testCreateBlogPost_success_return201() throws Exception {
 
-        Date now = new Date();
-        final BlogPost blogPost = BlogPost.BlogPostBuilder.aBlogPost().withBody("New Post Text").withId("1").withTimestamp(now).withUserId("user1").build();
+        final BlogPost blogPost = BlogPost.BlogPostBuilder.aBlogPost().withBody("New Post Text").withId("1").withUserId("user1").build();
         Mockito.when(dao.create(Mockito.any())).thenReturn(blogPost);
 
         // Do test
         this.mockMvc.perform(post("/blogposts")
-                .content(new Gson().toJson("New Post Text"))
+                .content(new Gson().toJson(blogPost))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
@@ -96,13 +95,12 @@ public class BlogPostControllerTest {
     @Test
     public void testUpdateBlogPost_success_return200() throws Exception {
 
-        Date now = new Date();
-        final BlogPost blogPost = BlogPost.BlogPostBuilder.aBlogPost().withBody("New Post Text").withId("1").withTimestamp(now).withUserId("user1").build();
+        final BlogPost blogPost = BlogPost.BlogPostBuilder.aBlogPost().withBody("New Post Text").withId("1").withUserId("user1").build();
         Mockito.when(dao.update(Mockito.any())).thenReturn(blogPost);
 
         // Do test
         this.mockMvc.perform(put("/blogposts/1")
-                .content(new Gson().toJson("New Post Text"))
+                .content(new Gson().toJson(blogPost))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

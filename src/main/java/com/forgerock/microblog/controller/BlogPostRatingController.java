@@ -44,8 +44,12 @@ public class BlogPostRatingController {
     }
 
     @PostMapping(REST_URL)
-    private ResponseEntity submitRatingForBlogPost(@RequestParam final int rating, @PathVariable(value = "id") String blogPostId) {
+    private ResponseEntity submitRatingForBlogPost(@RequestBody final int rating, @PathVariable(value = "id") String blogPostId) {
 
+        if (rating > BlogPostRating.MAX_RATING || rating < BlogPostRating.MIN_RATING) {
+            // Note: Could use JSR-303 bean validation if more complex objects and validation were required but keeping it simple for now.
+            throw new BadRequestException(String.format("Submitted rating value in body must be an integer between %d and %d inclusive ", BlogPostRating.MIN_RATING, BlogPostRating.MAX_RATING));
+        }
         if (StringUtils.isEmpty(blogPostId == null)) {
             throw new BadRequestException("Missing id field in URL. Usage: " + REST_URL);
         }

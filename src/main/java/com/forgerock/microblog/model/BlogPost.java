@@ -1,5 +1,8 @@
 package com.forgerock.microblog.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.forgerock.microblog.DateTimeConstants;
+
 import java.time.Instant;
 
 /**
@@ -9,6 +12,7 @@ public class BlogPost {
 
     private String id;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateTimeConstants.ISO_OFFSET_DATE_TIME)
     private Instant timestamp;
 
     private String body;

@@ -5,6 +5,11 @@ package com.forgerock.microblog.model;
  */
 public class BlogPostRating {
 
+    // Highest score for a post
+    public static final int MAX_RATING = 5;
+    // Lowest score for a post
+    public static final int MIN_RATING = 1;
+
     private String id;
 
     private String blogPostId;

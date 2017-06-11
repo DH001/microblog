@@ -38,7 +38,6 @@ public class BlogPostController {
 
     @GetMapping
     private List<BlogPost> getAll(BlogPostSortFilter blogPostSortFilter) {
-
         return blogPostDao.getAll(blogPostSortFilter);
     }
 
@@ -53,7 +52,7 @@ public class BlogPostController {
         return response.orElseThrow(NotFoundException::new);
     }
 
-    @PostMapping("/")
+    @PostMapping
     private ResponseEntity createBlogPost(@RequestBody final String blogPostText) {
         // We will accept empty posts as they can be updated later.
 

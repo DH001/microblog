@@ -59,24 +59,10 @@ public class BlogPostDao extends AbstractElasticsearchDao implements ICrudDao<Bl
         return results;
     }
 
-    private SortBuilder aSortBuilder(final SortColumn sortColumn) {
-
-        final org.elasticsearch.search.sort.SortBuilder sortBuilder;
-        if (sortColumn.getColumn().equals("userId")) {
-            // Fix for text value sorting - would need to use mapping properties to handle String fields correctly in a complete solution but quick fix for now.
-            sortBuilder = new FieldSortBuilder(sortColumn.getColumn() + ".keyword");
-        }
-        else {
-            sortBuilder = new FieldSortBuilder(sortColumn.getColumn());
-        }
-
-        sortBuilder.order(SortOrder.valueOf(sortColumn.getDirection().name()));
-        return sortBuilder;
-    }
-
     @Override
     public BlogPost create(final BlogPost resourceToCreate) {
 
+        Preconditions.checkNotNull(resourceToCreate);
         super.createNewDocument(resourceToCreate.getId(), GSON.toJson(resourceToCreate));
         return resourceToCreate;
     }
@@ -84,26 +70,24 @@ public class BlogPostDao extends AbstractElasticsearchDao implements ICrudDao<Bl
     @Override
     public BlogPost update(final BlogPost resourceToUpdate) throws NotFoundException {
 
+        Preconditions.checkNotNull(resourceToUpdate);
         super.updateDocument(resourceToUpdate.getId(), GSON.toJson(resourceToUpdate));
         return getById(resourceToUpdate.getId()).orElseThrow(NotFoundException::new);
     }
 
     @Override
     public void delete(final String id) {
-
         Preconditions.checkNotNull(id, "id cannot be null");
         deleteById(id);
     }
 
     @Override
     protected String getIndex() {
-
         return "microblog";
     }
 
     @Override
     protected String getType() {
-
         return "blogpost";
     }
 
@@ -138,5 +122,20 @@ public class BlogPostDao extends AbstractElasticsearchDao implements ICrudDao<Bl
         }
 
         return sortFilter.getSort().stream().map(SortColumn::parse).map(this::aSortBuilder).collect(Collectors.toList());
+    }
+
+    private SortBuilder aSortBuilder(final SortColumn sortColumn) {
+
+        final org.elasticsearch.search.sort.SortBuilder sortBuilder;
+        if (sortColumn.getColumn().equals("userId")) {
+            // Fix for text value sorting - would need to use mapping properties to handle String fields correctly in a complete solution but quick fix for now.
+            sortBuilder = new FieldSortBuilder(sortColumn.getColumn() + ".keyword");
+        }
+        else {
+            sortBuilder = new FieldSortBuilder(sortColumn.getColumn());
+        }
+
+        sortBuilder.order(SortOrder.valueOf(sortColumn.getDirection().name()));
+        return sortBuilder;
     }
 }

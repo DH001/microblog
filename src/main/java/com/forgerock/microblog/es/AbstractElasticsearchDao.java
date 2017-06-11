@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +26,7 @@ import java.util.Optional;
 public abstract class AbstractElasticsearchDao {
 
     // TODO Could be yml config value
-    private static int ES_MAX_SIZE = 10000; // Maximum allowed size with default ES install
+    protected static int ES_MAX_SIZE = 10000; // Maximum allowed size with default ES install
 
     private final static Logger LOG = LoggerFactory.getLogger(AbstractElasticsearchDao.class);
 
@@ -94,6 +95,17 @@ public abstract class AbstractElasticsearchDao {
     }
 
     /**
+     * Convenience method for findAll
+     *
+     * @param queryBuilder Query criteria
+     * @return Result Json
+     */
+    protected Optional<SearchResponse> findAll(QueryBuilder queryBuilder) {
+
+        return this.findAll(null, null, queryBuilder, Collections.emptyList());
+    }
+
+    /**
      * Find all requests with specified filters, page and sort
      *
      * @param from         Pagination start position
@@ -103,7 +115,6 @@ public abstract class AbstractElasticsearchDao {
      * @return Result JSON
      */
     protected Optional<SearchResponse> findAll(Integer from, Integer size, QueryBuilder queryBuilder, List<SortBuilder> sortBuilders) {
-
         LOG.debug("About to search /{}/{} , filters: {}", getIndex(), getType(), queryBuilder);
 
         // Build search

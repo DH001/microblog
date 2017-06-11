@@ -44,11 +44,11 @@ public class BlogPostRatingController {
     }
 
     @PostMapping(REST_URL)
-    private ResponseEntity submitRatingForBlogPost(@RequestBody final int rating, @PathVariable(value = "id") String blogPostId) {
+    private ResponseEntity submitRatingForBlogPost(@RequestBody final BlogPostRating blogPostRating, @PathVariable(value = "id") String blogPostId) {
 
-        if (rating > BlogPostRating.MAX_RATING || rating < BlogPostRating.MIN_RATING) {
+        if (blogPostRating.getRating() > BlogPostRating.MAX_RATING || blogPostRating.getRating() < BlogPostRating.MIN_RATING) {
             // Note: Could use JSR-303 bean validation if more complex objects and validation were required but keeping it simple for now.
-            throw new BadRequestException(String.format("Submitted rating value in body must be an integer between %d and %d inclusive ", BlogPostRating.MIN_RATING, BlogPostRating.MAX_RATING));
+            throw new BadRequestException(String.format("Submitted 'rating' value must be an integer between %d and %d inclusive ", BlogPostRating.MIN_RATING, BlogPostRating.MAX_RATING));
         }
         if (StringUtils.isEmpty(blogPostId == null)) {
             throw new BadRequestException("Missing id field in URL. Usage: " + REST_URL);
@@ -57,15 +57,16 @@ public class BlogPostRatingController {
         final String newId = UUID.randomUUID().toString();
         final BlogPostRating created = blogPostRatingDao.addToParentResource(blogPostId, BlogPostRating.BlogPostRatingBuilder
                 .aBlogPostRating()
-                .withRating(rating)
+                .withRating(blogPostRating.getRating())
                 .withId(newId)
-                .withBlogPostId(blogPostId)
+                .withBlogPostId(blogPostId) // Take from URL in preference to what is in body
+                .withUserId(blogPostRating.getUserId())
                 .build()
         );
         LOG.trace("Created blog post rating: {}", created);
         final URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{id}/rating/{ratingId}")
-                .buildAndExpand(created.getBlogPostId(), created.getId()).toUri();
+                .fromCurrentRequest().path("/{ratingId}")
+                .buildAndExpand(created.getId(), created.getId()).toUri();
         LOG.trace("Built URI for created blog post rating: {}", location);
         return ResponseEntity.created(location).build();
     }

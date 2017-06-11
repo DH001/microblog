@@ -1,7 +1,7 @@
 package com.forgerock.microblog.model;
 
 /**
- * A rating (1-5) for a blog post submitted by a user.
+ * A numeric rating for a blog post submitted by a user.
  */
 public class BlogPostRating {
 
@@ -15,7 +15,7 @@ public class BlogPostRating {
 
     private String blogPostId;
 
-    private int rating;
+    private Integer rating;
 
     private String userId;
 
@@ -33,27 +33,43 @@ public class BlogPostRating {
     }
 
     public String getId() {
-
         return id;
     }
 
-    public String getBlogPostId() {
+    public void setId(final String id) {
 
+        this.id = id;
+    }
+
+    public String getBlogPostId() {
         return blogPostId;
     }
 
-    public int getRating() {
+    public void setBlogPostId(final String blogPostId) {
+
+        this.blogPostId = blogPostId;
+    }
+
+    public Integer getRating() {
 
         return rating;
     }
 
-    public String getUserId() {
+    public void setRating(final Integer rating) {
 
+        this.rating = rating;
+    }
+
+    public String getUserId() {
         return userId;
     }
 
-    public static final class BlogPostRatingBuilder {
+    public void setUserId(final String userId) {
 
+        this.userId = userId;
+    }
+
+    public static final class BlogPostRatingBuilder {
         private String id;
         private String blogPostId;
         private int rating;

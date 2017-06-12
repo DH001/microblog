@@ -16,11 +16,10 @@ public interface IChildResourceDao<Child> {
     List<Child> getAllByParentId(String parentId);
 
     /**
-     * Add new child resource to parent resource
+     * Add new child resource to parent resource (parent resource id should be inside resource object)
      *
-     * @param parentId Parent resource id
      * @param child    Child resource with no id
      * @return Created child resource with generated child id
      */
-    Child addToParentResource(String parentId, Child child);
+    Child addToParentResource(Child child);
 }

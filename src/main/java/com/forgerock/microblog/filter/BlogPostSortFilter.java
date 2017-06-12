@@ -78,4 +78,68 @@ public class BlogPostSortFilter implements SortFilter {
     public void setSort(final List<String> sort) {
         this.sort = sort;
     }
+
+
+    public static final class BlogPostSortFilterBuilder {
+
+        private String fromDateTime;
+        private String toDateTime;
+        // Paging
+        private Integer size;
+        private Integer offset;
+        private List<String> userIds = new ArrayList<>();
+        private List<String> sort = new ArrayList<>();
+
+        private BlogPostSortFilterBuilder() {}
+
+        public static BlogPostSortFilterBuilder aBlogPostSortFilter() { return new BlogPostSortFilterBuilder();}
+
+        public BlogPostSortFilterBuilder withFromDateTime(String fromDateTime) {
+
+            this.fromDateTime = fromDateTime;
+            return this;
+        }
+
+        public BlogPostSortFilterBuilder withToDateTime(String toDateTime) {
+
+            this.toDateTime = toDateTime;
+            return this;
+        }
+
+        public BlogPostSortFilterBuilder withSize(Integer size) {
+
+            this.size = size;
+            return this;
+        }
+
+        public BlogPostSortFilterBuilder withOffset(Integer offset) {
+
+            this.offset = offset;
+            return this;
+        }
+
+        public BlogPostSortFilterBuilder withUserIds(List<String> userIds) {
+
+            this.userIds = userIds;
+            return this;
+        }
+
+        public BlogPostSortFilterBuilder withSort(List<String> sort) {
+
+            this.sort = sort;
+            return this;
+        }
+
+        public BlogPostSortFilter build() {
+
+            BlogPostSortFilter blogPostSortFilter = new BlogPostSortFilter();
+            blogPostSortFilter.setFromDateTime(fromDateTime);
+            blogPostSortFilter.setToDateTime(toDateTime);
+            blogPostSortFilter.setSize(size);
+            blogPostSortFilter.setOffset(offset);
+            blogPostSortFilter.setUserIds(userIds);
+            blogPostSortFilter.setSort(sort);
+            return blogPostSortFilter;
+        }
+    }
 }

@@ -34,7 +34,7 @@ public class BlogPostDao extends AbstractElasticsearchDao implements ICrudDao<Bl
     public Optional<BlogPost> getById(final String id) {
         Preconditions.checkNotNull(id, "id cannot be null");
 
-        Optional<GetResponse> resp = super.findById(id);
+        Optional<GetResponse> resp = getClient().getById(getIndex(), getType(), id);
         if (!resp.isPresent() || StringUtils.isEmpty(resp.get().getSourceAsString())) {
             return Optional.empty();
         }
@@ -47,7 +47,7 @@ public class BlogPostDao extends AbstractElasticsearchDao implements ICrudDao<Bl
     public List<BlogPost> getAll(final BlogPostSortFilter sortFilter) {
         Preconditions.checkNotNull(sortFilter, "sortFilter cannot be null");
 
-        Optional<SearchResponse> resp = findAll(sortFilter.getOffset(), sortFilter.getSize(),
+        Optional<SearchResponse> resp = getClient().getAll(getIndex(), getType(), sortFilter.getOffset(), sortFilter.getSize(),
                 getQueryBuilder(sortFilter),
                 getSortBuilders(sortFilter));
         List<BlogPost> results = new ArrayList<>();
@@ -63,22 +63,25 @@ public class BlogPostDao extends AbstractElasticsearchDao implements ICrudDao<Bl
     public BlogPost create(final BlogPost resourceToCreate) {
 
         Preconditions.checkNotNull(resourceToCreate);
-        super.createNewDocument(resourceToCreate.getId(), GSON.toJson(resourceToCreate));
+        getClient().create(getIndex(), getType(), resourceToCreate.getId(), GSON.toJson(resourceToCreate));
         return resourceToCreate;
     }
 
     @Override
     public BlogPost update(final BlogPost resourceToUpdate) throws NotFoundException {
-
         Preconditions.checkNotNull(resourceToUpdate);
-        super.updateDocument(resourceToUpdate.getId(), GSON.toJson(resourceToUpdate));
-        return getById(resourceToUpdate.getId()).orElseThrow(NotFoundException::new);
+
+        // Check exists
+        getById(resourceToUpdate.getId()).orElseThrow(NotFoundException::new);
+
+        getClient().update(getIndex(), getType(), resourceToUpdate.getId(), GSON.toJson(resourceToUpdate));
+        return resourceToUpdate;
     }
 
     @Override
     public void delete(final String id) {
         Preconditions.checkNotNull(id, "id cannot be null");
-        deleteById(id);
+        getClient().deleteById(getIndex(), getType(), id);
     }
 
     @Override

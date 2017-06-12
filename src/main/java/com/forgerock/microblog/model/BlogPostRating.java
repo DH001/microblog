@@ -69,6 +69,52 @@ public class BlogPostRating {
         this.userId = userId;
     }
 
+    @Override
+    public boolean equals(final Object o) {
+
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof BlogPostRating)) {
+            return false;
+        }
+
+        final BlogPostRating that = (BlogPostRating) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) {
+            return false;
+        }
+        if (blogPostId != null ? !blogPostId.equals(that.blogPostId) : that.blogPostId != null) {
+            return false;
+        }
+        if (rating != null ? !rating.equals(that.rating) : that.rating != null) {
+            return false;
+        }
+        return userId != null ? userId.equals(that.userId) : that.userId == null;
+    }
+
+    @Override
+    public int hashCode() {
+
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (blogPostId != null ? blogPostId.hashCode() : 0);
+        result = 31 * result + (rating != null ? rating.hashCode() : 0);
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+
+        final StringBuilder sb = new StringBuilder("BlogPostRating{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", blogPostId='").append(blogPostId).append('\'');
+        sb.append(", rating=").append(rating);
+        sb.append(", userId='").append(userId).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
+
     public static final class BlogPostRatingBuilder {
         private String id;
         private String blogPostId;

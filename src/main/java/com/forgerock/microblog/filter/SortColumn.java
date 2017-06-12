@@ -1,5 +1,8 @@
 package com.forgerock.microblog.filter;
 
+import com.google.common.base.Preconditions;
+import org.springframework.util.StringUtils;
+
 /**
  * Results column to sort by
  */
@@ -10,7 +13,6 @@ public class SortColumn {
     private SortDirection direction;
 
     public SortColumn(String column, String direction) {
-
         this.column = column;
         this.direction = SortDirection.valueOf(direction.toUpperCase());
     }
@@ -25,7 +27,11 @@ public class SortColumn {
 
     public static SortColumn parse(String sortParam) {
 
+        Preconditions.checkArgument(!StringUtils.isEmpty(sortParam), "String cannot be empty");
         String[] splitStr = sortParam.split(SORT_SPLIT_TOKEN);
+        if (splitStr.length != 2) {
+            throw new IllegalArgumentException("Must be the format: sortColumnName:[ASC|DESC]");
+        }
         return new SortColumn(splitStr[0], splitStr[1]);
     }
 }

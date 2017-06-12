@@ -86,7 +86,7 @@ public class BlogPostRatingController {
 
         // Add rating
         final String newId = UUID.randomUUID().toString();
-        final BlogPostRating created = blogPostRatingDao.addToParentResource(blogPostId, BlogPostRating.BlogPostRatingBuilder
+        final BlogPostRating created = blogPostRatingDao.addToParentResource(BlogPostRating.BlogPostRatingBuilder
                 .aBlogPostRating()
                 .withRating(blogPostRating.getRating())
                 .withId(newId)

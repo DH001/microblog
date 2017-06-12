@@ -76,7 +76,7 @@ public class BlogPostRatingControllerTest {
     public void testAddRatingToPost_validRating_return204() throws Exception {
         // Setup data and mock
         BlogPostRating rating = BlogPostRating.BlogPostRatingBuilder.aBlogPostRating().withId("10").withBlogPostId("1").withUserId("user1").withRating(5).build();
-        Mockito.when(dao.addToParentResource(eq("1"), Mockito.any())).thenReturn(rating);
+        Mockito.when(dao.addToParentResource(Mockito.any())).thenReturn(rating);
         Mockito.when(blogPostDao.getById(eq("1"))).thenReturn(Optional.of(BlogPost.BlogPostBuilder.aBlogPost().withId("1").build()));
 
         // Do test

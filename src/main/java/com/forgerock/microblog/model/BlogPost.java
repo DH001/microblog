@@ -46,6 +46,52 @@ public class BlogPost {
         return userId;
     }
 
+    @Override
+    public boolean equals(final Object o) {
+
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof BlogPost)) {
+            return false;
+        }
+
+        final BlogPost blogPost = (BlogPost) o;
+
+        if (id != null ? !id.equals(blogPost.id) : blogPost.id != null) {
+            return false;
+        }
+        if (timestamp != null ? !timestamp.equals(blogPost.timestamp) : blogPost.timestamp != null) {
+            return false;
+        }
+        if (body != null ? !body.equals(blogPost.body) : blogPost.body != null) {
+            return false;
+        }
+        return userId != null ? userId.equals(blogPost.userId) : blogPost.userId == null;
+    }
+
+    @Override
+    public int hashCode() {
+
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);
+        result = 31 * result + (body != null ? body.hashCode() : 0);
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+
+        final StringBuilder sb = new StringBuilder("BlogPost{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", timestamp=").append(timestamp);
+        sb.append(", body='").append(body).append('\'');
+        sb.append(", userId='").append(userId).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
+
     public static final class BlogPostBuilder {
         private String id;
         private Date timestamp;

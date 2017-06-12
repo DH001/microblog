@@ -19,14 +19,13 @@ public class BlogPostRatingDao extends AbstractElasticsearchDao implements IChil
 
     @Override
     public List<BlogPostRating> getAllByParentId(final String parentId) {
-
         Preconditions.checkNotNull(parentId, "parentId cannot be null");
 
         // Filter by blog post (parent) id
         final QueryBuilder queryBuilder = QueryBuilders.commonTermsQuery("blogPostId", Collections.singletonList(parentId));
 
         // Do search
-        final Optional<SearchResponse> resp = findAll(queryBuilder);
+        final Optional<SearchResponse> resp = getClient().getAll(getIndex(), getType(), queryBuilder);
 
         // Handle results
         List<BlogPostRating> results = new ArrayList<>();
@@ -39,23 +38,21 @@ public class BlogPostRatingDao extends AbstractElasticsearchDao implements IChil
     }
 
     @Override
-    public BlogPostRating addToParentResource(final String blogPostId, final BlogPostRating resourceToCreate) {
-
+    public BlogPostRating addToParentResource(final BlogPostRating resourceToCreate) {
         Preconditions.checkNotNull(resourceToCreate, "Blog post rating cannot be null");
-        Preconditions.checkNotNull(blogPostId, "Blog Post id cannot be null");
-        super.createNewDocument(resourceToCreate.getId(), GSON.toJson(resourceToCreate));
+        Preconditions.checkNotNull(resourceToCreate.getId(), "Blog post rating Id cannot be null");
+        Preconditions.checkNotNull(resourceToCreate.getBlogPostId(), "Blog post Id cannot be null");
+        getClient().create(getIndex(), getType(), resourceToCreate.getId(), GSON.toJson(resourceToCreate));
         return resourceToCreate;
     }
 
     @Override
     protected String getIndex() {
-
         return "microblog";
     }
 
     @Override
     protected String getType() {
-
         return "rating";
     }
 }

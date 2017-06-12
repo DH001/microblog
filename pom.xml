@@ -38,9 +38,6 @@
 
         <!-- Docker -->
         <version.docker-maven-plugin>0.4.13</version.docker-maven-plugin>
-        <docker.image.prefix>microblog</docker.image.prefix>
-        <docker.image.name>${docker.image.prefix}/microblog-rest-services</docker.image.name>
-
     </properties>
 
     <dependencies>
@@ -189,62 +186,9 @@
     </dependencies>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>com.spotify</groupId>
-                    <artifactId>docker-maven-plugin</artifactId>
-                    <version>${version.docker-maven-plugin}</version>
-                    <configuration>
-                        <imageName>${docker.image.name}</imageName>
-                        <pullOnBuild>false</pullOnBuild>
-                        <useConfigFile>true</useConfigFile>
-                        <dockerDirectory>${project.basedir}/src/main/resources/docker</dockerDirectory>
-                        <imageTags>
-                            <imageTag>${project.version}</imageTag>
-                        </imageTags>
-                        <resources>
-                            <resource>
-                                <directory>${project.build.directory}</directory>
-                                <includes>
-                                    <include>${project.artifactId}-${project.version}.jar</include>
-                                </includes>
-                            </resource>
-                        </resources>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>build-image</id>
-                            <phase>install</phase>
-                            <goals>
-                                <goal>build</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
 
         <plugins>
-
-            <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>0.4.11</version>
-                <configuration>
-                    <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
-                    <dockerDirectory>${project.basedir}/src/main/resources/docker</dockerDirectory>
-                    <resources>
-                        <resource>
-                            <directory>${project.build.directory}</directory>
-                            <includes>
-                                <include>${project.artifactId}-${project.version}.jar</include>
-                            </includes>
-                        </resource>
-                    </resources>
-                </configuration>
-            </plugin>
-
+            <!-- Spring Boot to run REST services -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -265,51 +209,40 @@
                 </executions>
             </plugin>
 
+            <!-- Build Docker image -->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>${version.docker-maven-plugin}</version>
+                <configuration>
+                    <imageName>microblog-rest-services</imageName>
+                    <useConfigFile>true</useConfigFile>
+                    <dockerDirectory>${project.basedir}</dockerDirectory>
+                    <imageTags>
+                        <imageTag>${project.version}</imageTag>
+                    </imageTags>
+                    <resources>
+                        <resource>
+                            <directory>${project.build.directory}</directory>
+                            <includes>
+                                <include>${project.artifactId}-${project.version}.jar</include>
+                            </includes>
+                        </resource>
+                    </resources>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>build-image</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>docker</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.spotify</groupId>
-                        <artifactId>docker-maven-plugin</artifactId>
-                        <version>${version.docker-maven-plugin}</version>
-                        <configuration>
-                            <imageName>${docker.image.name}</imageName>
-                            <registryUrl>${docker.image.prefix}</registryUrl>
-                            <pullOnBuild>true</pullOnBuild>
-                            <useConfigFile>true</useConfigFile>
-                            <dockerDirectory>${project.basedir}/src/main/resources/docker</dockerDirectory>
-                            <imageTags>
-                                <imageTag>${project.version}</imageTag>
-                            </imageTags>
-                            <resources>
-                                <resource>
-                                    <directory>${project.build.directory}</directory>
-                                    <includes>
-                                        <include>${project.artifactId}-${project.version}.jar</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>build-image</id>
-                                <phase>install</phase>
-                                <goals>
-                                    <goal>build</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
 
     <repositories>
         <repository>

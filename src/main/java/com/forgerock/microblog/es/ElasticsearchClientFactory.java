@@ -23,7 +23,7 @@ public class ElasticsearchClientFactory {
     private final static Logger LOG = LoggerFactory.getLogger(ElasticsearchClientFactory.class);
 
     // TODO Could go in yml file
-    private static final String host = "localhost";
+    private static final String host = "elasticsearch";
     private static final int port = 9300; // Transport client port
     private static final String cluster = "elasticsearch"; // Transport client port
 

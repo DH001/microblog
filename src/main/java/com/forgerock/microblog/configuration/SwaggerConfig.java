@@ -51,11 +51,11 @@ public class SwaggerConfig {
 
         return new ApiInfo(
                 "Microblog REST Service",
-                "TBA",
+                "This is a microblogging REST platform that can be deployed and uses to support any simple blogging UI (e.g. a Supervillain ideas website)",
                 API_VERSION,
                 "N/A",
                 CONTACT,
-                "Apache2",
+                "",
                 "");
     }
 

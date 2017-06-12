@@ -137,7 +137,6 @@ public class ElasticsearchClient {
      * @return Result Json
      */
     public Optional<SearchResponse> getAll(final String index, final String type, final QueryBuilder queryBuilder) {
-
         return this.getAll(index, type, null, null, queryBuilder, Collections.emptyList());
     }
 

@@ -23,7 +23,6 @@ import java.util.UUID;
  * REST service for blog posts
  */
 @RestController
-@RequestMapping("/blogposts")
 public class BlogPostController {
 
     private final static Logger LOG = LoggerFactory.getLogger(BlogPostController.class);
@@ -69,7 +68,7 @@ public class BlogPostController {
      * @param id ID of the blog post (a GUID)
      * @return A BlogPost or 401 if not found.
      */
-    @GetMapping("/{id}")
+    @GetMapping("/blogposts/{id}")
     public BlogPost getBlogPost(@PathVariable(value = "id") final String id) {
         if (StringUtils.isEmpty(id == null)) {
             throw new BadRequestException("Missing id field in URL. Usage: /blogposts/{id}");
@@ -91,7 +90,7 @@ public class BlogPostController {
      * @param blogPost New Blog Post data
      * @return 201 if success
      */
-    @PostMapping
+    @PostMapping("/blogposts")
     public ResponseEntity createBlogPost(@RequestBody final BlogPost blogPost) {
         // We will accept empty posts as they can be updated later.
 
@@ -124,7 +123,7 @@ public class BlogPostController {
      * @param blogPost Updated data (only body will be updated)
      * @return Updated blog post with HTTP 200. 404 if not found.
      */
-    @PutMapping("/{id}")
+    @PutMapping("/blogposts/{id}")
     public ResponseEntity<BlogPost> updateBlogPost(@PathVariable(value = "id") final String id, @RequestBody final BlogPost blogPost) {
         if (StringUtils.isEmpty(id == null)) {
             throw new BadRequestException("Missing id field in URL. Usage: /blogposts/{id}");
@@ -150,12 +149,23 @@ public class BlogPostController {
      * @param id Id of BlogPost
      * @return HTTP 204
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/blogposts/{id}")
     public ResponseEntity<BlogPost> deleteBlogPost(@PathVariable(value = "id") final String id) {
         if (StringUtils.isEmpty(id == null)) {
             throw new BadRequestException("Missing id field in URL. Usage: /blogposts/{id}");
         }
         blogPostDao.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public List<BlogPost> searchOrders(@RequestParam("searchTerm") final String searchTerm) {
+        // No point searching with empty string
+        if (StringUtils.isEmpty(searchTerm)) {
+            throw new BadRequestException("Empty search term");
+        }
+
+        // Do search
+        return blogPostDao.search(searchTerm);
     }
 }

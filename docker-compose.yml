@@ -31,7 +31,8 @@ services:
       - "9300:9300"
 
   microblog-rest-services:
-    build: ./target
+    #build: ./target
+    image: microblog-rest-services
     environment:
       SPRING_PROFILES_ACTIVE: default
       ENV_ARGS: ''

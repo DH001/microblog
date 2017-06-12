@@ -19,16 +19,16 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.termsQuery;
 
 @Component
-public class BlogPostDao extends AbstractElasticsearchDao implements ICrudDao<BlogPost, BlogPostSortFilter> {
+public class BlogPostDao extends AbstractElasticsearchDao implements ICrudDao<BlogPost, BlogPostSortFilter>, ITextSearchDao<BlogPost> {
+
+    // Search field - Single body field with default waiting - could be extended as required.
+    private static final Map<String, Float> SEARCH_FIELD = Collections.singletonMap("body", 1.0F);
 
     @Override
     public Optional<BlogPost> getById(final String id) {
@@ -50,6 +50,20 @@ public class BlogPostDao extends AbstractElasticsearchDao implements ICrudDao<Bl
         Optional<SearchResponse> resp = getClient().getAll(getIndex(), getType(), sortFilter.getOffset(), sortFilter.getSize(),
                 getQueryBuilder(sortFilter),
                 getSortBuilders(sortFilter));
+        List<BlogPost> results = new ArrayList<>();
+        if (resp.isPresent() && resp.get().getHits().getTotalHits() > 0) {
+            for (SearchHit hit : resp.get().getHits().getHits()) {
+                results.add(GSON.fromJson(hit.getSourceAsString(), BlogPost.class));
+            }
+        }
+        return results;
+    }
+
+    @Override
+    public List<BlogPost> search(final String searchTerm) {
+
+        Preconditions.checkNotNull(searchTerm);
+        Optional<SearchResponse> resp = getClient().getAll(getIndex(), getType(), QueryBuilders.simpleQueryStringQuery(searchTerm + "*").fields(SEARCH_FIELD));
         List<BlogPost> results = new ArrayList<>();
         if (resp.isPresent() && resp.get().getHits().getTotalHits() > 0) {
             for (SearchHit hit : resp.get().getHits().getHits()) {

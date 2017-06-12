@@ -55,7 +55,7 @@ public class BlogPostController {
      * @param blogPostSortFilter Filter, sort and paging values
      * @return List of blog posts or empty list if none
      */
-    @GetMapping
+    @GetMapping("/blogposts")
     public List<BlogPost> getAll(BlogPostSortFilter blogPostSortFilter) {
 
         return blogPostDao.getAll(blogPostSortFilter);

@@ -1,7 +1,9 @@
 package com.forgerock.microblog.controller;
 
+import com.forgerock.microblog.dao.BlogPostDao;
 import com.forgerock.microblog.dao.BlogPostRatingDao;
 import com.forgerock.microblog.exception.BadRequestException;
+import com.forgerock.microblog.model.BlogPost;
 import com.forgerock.microblog.model.BlogPostRating;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -25,13 +28,24 @@ public class BlogPostRatingController {
 
     private final static Logger LOG = LoggerFactory.getLogger(BlogPostRatingController.class);
 
+    private final BlogPostDao blogPostDao;
+
     private final BlogPostRatingDao blogPostRatingDao;
 
     @Autowired
-    public BlogPostRatingController(BlogPostRatingDao blogPostRatingDao) {
+    public BlogPostRatingController(BlogPostDao blogPostDao, BlogPostRatingDao blogPostRatingDao) {
+
+        this.blogPostDao = blogPostDao;
         this.blogPostRatingDao = blogPostRatingDao;
     }
 
+    /**
+     * Get all the ratings for a specific BlogPost.
+     * e.g. GET /blogposts/38d566e9-7af0-4b77-ace4-cd35a2fea4ee/ratings
+     *
+     * @param id Blog Post Id
+     * @return List of ratings and who made them.
+     */
     @GetMapping(REST_URL)
     public List<BlogPostRating> getAllRatingsForBlogPost(@PathVariable(value = "id") final String id) {
 
@@ -41,6 +55,18 @@ public class BlogPostRatingController {
         return blogPostRatingDao.getAllByParentId(id);
     }
 
+    /**
+     * Submit a new rating for a Blog Post.
+     * <p>
+     * <p>
+     * PUT /blogposts/38d566e9-7af0-4b77-ace4-cd35a2fea4ee/ratings  <br/>
+     * {"rating": 4, "userId": "blofeld"}
+     * </p>
+     *
+     * @param blogPostRating A rating from 1 to 5.
+     * @param blogPostId     A Blog Post Id
+     * @return 201 if successfully created. 404 if Blog Post not found.
+     */
     @PostMapping(REST_URL)
     public ResponseEntity submitRatingForBlogPost(@RequestBody final BlogPostRating blogPostRating, @PathVariable(value = "id") String blogPostId) {
 
@@ -52,6 +78,13 @@ public class BlogPostRatingController {
             throw new BadRequestException("Missing id field in URL. Usage: " + REST_URL);
         }
 
+        // If BLog Post Id does  not match an existing blog post then return 404.
+        Optional<BlogPost> blogPost = blogPostDao.getById(blogPostId);
+        if (!blogPost.isPresent()) {
+            ResponseEntity.notFound();
+        }
+
+        // Add rating
         final String newId = UUID.randomUUID().toString();
         final BlogPostRating created = blogPostRatingDao.addToParentResource(blogPostId, BlogPostRating.BlogPostRatingBuilder
                 .aBlogPostRating()

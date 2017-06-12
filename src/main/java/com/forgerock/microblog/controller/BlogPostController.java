@@ -32,18 +32,45 @@ public class BlogPostController {
 
     @Autowired
     public BlogPostController(BlogPostDao blogPostDao) {
-
         this.blogPostDao = blogPostDao;
     }
 
+    /**
+     * Get a list of all the blogPosts.
+     * <p>
+     * Can be filtered by a date range and/or user ID :
+     * e.g. GET /blogposts?userIds=user1,user3&fromDateTime=2010-06-11T15:06:24.627Z&toDateTime=2016-06-11T15:06:24.627Z
+     * </p>
+     * <p>
+     * Can be sorted by a date range and/or user ID :
+     * e.g. GET /blogposts?sort=userId:DESC
+     * </p>
+     * <p>
+     * Can be paged if required:
+     * e.g. GET /blogposts?size=10&offset=0
+     * </p>
+     * <p>
+     * Note that sort, filter and paging can all be used on the same URL.
+     * </p>
+     *
+     * @param blogPostSortFilter Filter, sort and paging values
+     * @return List of blog posts or empty list if none
+     */
     @GetMapping
     public List<BlogPost> getAll(BlogPostSortFilter blogPostSortFilter) {
+
         return blogPostDao.getAll(blogPostSortFilter);
     }
 
+    /**
+     * Get a specific BlogPost by its ID.
+     * e.g. GET /blogposts/ccafed04-96a2-4a2e-9147-4453f3d309a4
+     *
+     * @param id ID of the blog post (a GUID)
+     * @return A BlogPost or 401 if not found.
+     */
     @GetMapping("/{id}")
     public BlogPost getBlogPost(@PathVariable(value = "id") final String id) {
-
         if (StringUtils.isEmpty(id == null)) {
             throw new BadRequestException("Missing id field in URL. Usage: /blogposts/{id}");
         }
@@ -52,6 +79,18 @@ public class BlogPostController {
         return response.orElseThrow(NotFoundException::new);
     }
 
+    /**
+     * Create a new BlogPost.
+     * <p>
+     * POST /blogposts  <br/>
+     * { "body": "Evil plans",  "userId": "DrEvil" }
+     * </p>
+     *
+     * Note that the timestamp and ID will be automatically generated.
+     * The URL location of the new BlogPost will be returned in the Location header of the response.
+     * @param blogPost New Blog Post data
+     * @return 201 if success
+     */
     @PostMapping
     public ResponseEntity createBlogPost(@RequestBody final BlogPost blogPost) {
         // We will accept empty posts as they can be updated later.
@@ -73,6 +112,18 @@ public class BlogPostController {
         return ResponseEntity.created(location).build();
     }
 
+    /**
+     * Update the body text of an existing POST. UserId and Timestamp cannot be updated and will be ignored if supplied.
+     * <p>
+     * PUT /blogposts/38d566e9-7af0-4b77-ace4-cd35a2fea4ee  <br/>
+     * { "body": "New Evil plans" }
+     * </p>
+     *
+     *
+     * @param id ID for post to update. Must exist.
+     * @param blogPost Updated data (only body will be updated)
+     * @return Updated blog post with HTTP 200. 404 if not found.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<BlogPost> updateBlogPost(@PathVariable(value = "id") final String id, @RequestBody final BlogPost blogPost) {
         if (StringUtils.isEmpty(id == null)) {
@@ -84,6 +135,7 @@ public class BlogPostController {
                 .aBlogPost()
                 .withId(id)
                 // Ignore timestamp and userId by design - we only update the text
+                // When user authentication is added we can limit updates to the user who created the BlogPost.
                 .withBody(blogPost.getBody())
                 .build()
         );
@@ -91,6 +143,13 @@ public class BlogPostController {
         return ResponseEntity.ok(updated);
     }
 
+    /**
+     * Delete an existing BlogPost. If not found then no action is taken.
+     * e.g. DELETE /blogposts/38d566e9-7af0-4b77-ace4-cd35a2fea4ee
+     *
+     * @param id Id of BlogPost
+     * @return HTTP 204
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<BlogPost> deleteBlogPost(@PathVariable(value = "id") final String id) {
         if (StringUtils.isEmpty(id == null)) {

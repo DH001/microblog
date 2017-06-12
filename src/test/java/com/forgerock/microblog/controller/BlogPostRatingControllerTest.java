@@ -1,6 +1,8 @@
 package com.forgerock.microblog.controller;
 
+import com.forgerock.microblog.dao.BlogPostDao;
 import com.forgerock.microblog.dao.BlogPostRatingDao;
+import com.forgerock.microblog.model.BlogPost;
 import com.forgerock.microblog.model.BlogPostRating;
 import com.google.gson.Gson;
 import org.junit.Test;
@@ -17,7 +19,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
+import static org.mockito.Matchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -28,6 +32,9 @@ public class BlogPostRatingControllerTest {
 
     @Autowired
     MockMvc mockMvc;
+
+    @MockBean
+    BlogPostDao blogPostDao;
 
     @MockBean
     BlogPostRatingDao dao;
@@ -69,7 +76,8 @@ public class BlogPostRatingControllerTest {
     public void testAddRatingToPost_validRating_return204() throws Exception {
         // Setup data and mock
         BlogPostRating rating = BlogPostRating.BlogPostRatingBuilder.aBlogPostRating().withId("10").withBlogPostId("1").withUserId("user1").withRating(5).build();
-        Mockito.when(dao.addToParentResource(Mockito.eq("1"), Mockito.any())).thenReturn(rating);
+        Mockito.when(dao.addToParentResource(eq("1"), Mockito.any())).thenReturn(rating);
+        Mockito.when(blogPostDao.getById(eq("1"))).thenReturn(Optional.of(BlogPost.BlogPostBuilder.aBlogPost().withId("1").build()));
 
         // Do test
         this.mockMvc.perform(post("/blogposts/1/ratings")

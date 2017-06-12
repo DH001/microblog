@@ -20,3 +20,23 @@ logging:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread]  %logger{36}: %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36}: %msg%n"
   file: /tmp/application.log
+
+elasticsearch:
+  host: localhost
+  port: 9300  # 9300 is the transport port that we require for Java API
+  cluster: elasticsearch
+
+---
+
+spring:
+    profiles: default
+
+---
+
+spring:
+    profiles: docker
+
+elasticsearch:
+  host: elasticsearch # Docker requires hostname from image name
+  port: 9300  # 9300 is the transport port that we require for Java API
+  cluster: elasticsearch

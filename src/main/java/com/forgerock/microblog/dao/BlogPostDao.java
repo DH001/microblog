@@ -27,8 +27,13 @@ import static org.elasticsearch.index.query.QueryBuilders.termsQuery;
 @Component
 public class BlogPostDao extends AbstractElasticsearchDao implements ICrudDao<BlogPost, BlogPostSortFilter>, ITextSearchDao<BlogPost> {
 
-    // Search field - Single body field with default waiting - could be extended as required.
-    private static final Map<String, Float> SEARCH_FIELD = Collections.singletonMap("body", 1.0F);
+    // Search field - Search 'body' and 'userId' fields with equal weightings - could be extended as required.
+    private static final Map<String, Float> SEARCH_FIELDS = new HashMap<>();
+
+    static {
+        SEARCH_FIELDS.put("body", 1.0F);
+        SEARCH_FIELDS.put("userId", 1.0F);
+    }
 
     @Override
     public Optional<BlogPost> getById(final String id) {
@@ -63,7 +68,7 @@ public class BlogPostDao extends AbstractElasticsearchDao implements ICrudDao<Bl
     public List<BlogPost> search(final String searchTerm) {
 
         Preconditions.checkNotNull(searchTerm);
-        Optional<SearchResponse> resp = getClient().getAll(getIndex(), getType(), QueryBuilders.simpleQueryStringQuery(searchTerm + "*").fields(SEARCH_FIELD));
+        Optional<SearchResponse> resp = getClient().getAll(getIndex(), getType(), QueryBuilders.simpleQueryStringQuery(searchTerm + "*").fields(SEARCH_FIELDS));
         List<BlogPost> results = new ArrayList<>();
         if (resp.isPresent() && resp.get().getHits().getTotalHits() > 0) {
             for (SearchHit hit : resp.get().getHits().getHits()) {

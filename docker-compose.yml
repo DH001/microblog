@@ -34,7 +34,7 @@ services:
     #build: ./target
     image: microblog-rest-services
     environment:
-      SPRING_PROFILES_ACTIVE: default
+      SPRING_PROFILES_ACTIVE: docker
       ENV_ARGS: ''
     networks:
       - microblog

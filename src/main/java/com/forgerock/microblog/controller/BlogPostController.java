@@ -158,6 +158,14 @@ public class BlogPostController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Search for a single text term (whole word match)
+     * <p>
+     * Usage:  /search?searchTerm={my_term}
+     *
+     * @param searchTerm Single search term
+     * @return Results
+     */
     @GetMapping("/search")
     public List<BlogPost> searchOrders(@RequestParam("searchTerm") final String searchTerm) {
         // No point searching with empty string

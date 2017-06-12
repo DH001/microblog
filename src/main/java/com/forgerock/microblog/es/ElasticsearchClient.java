@@ -1,5 +1,6 @@
 package com.forgerock.microblog.es;
 
+import com.forgerock.microblog.configuration.ApplicationProperties;
 import com.google.common.base.Preconditions;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
@@ -15,6 +16,7 @@ import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -36,21 +38,28 @@ public class ElasticsearchClient {
 
     private final static Logger LOG = LoggerFactory.getLogger(ElasticsearchClient.class);
 
-    // TODO Could go in yml file
-    private static final String host = "elasticsearch";
-    private static final int port = 9300; // Transport client port
-    private static final String cluster = "elasticsearch"; // Transport client port
+    // From YML
+    private String host = "elasticsearch";
+    private int port = 9300; // Transport client port
+    private String cluster = "elasticsearch";
 
     private static final String CLUSTER_NAME_KEY = "cluster.name";
+
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
     private TransportClient transportClient;
 
     @PostConstruct
     public void init() {
+
+        host = applicationProperties.getElasticsearch().getHost();
+        port = applicationProperties.getElasticsearch().getPort();
+        cluster = applicationProperties.getElasticsearch().getCluster();
+
         final Settings settings = Settings.builder()
                 .put(CLUSTER_NAME_KEY, cluster).build();
         try {
-            LOG.debug("Connecting to ElasticSearch with host: {} , post: {} , cluster: {}", host, port, cluster);
             transportClient = new PreBuiltTransportClient(settings)
                     .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(host), port));
             LOG.info("Connected to ElasticSearch on: {}:{} , cluster: {}", host, port, cluster);
@@ -70,9 +79,8 @@ public class ElasticsearchClient {
      * @return Get Response or empty
      */
     public Optional<GetResponse> getById(final String index, final String type, final String id) {
-
-        LOG.debug("About to GET /{}/{}/{}", index, type, id);
         try {
+            LOG.debug("GET /{}/{}/{}", index, type, id);
             return Optional.ofNullable(
                     transportClient.prepareGet(index, type, id).get()
             );
@@ -93,7 +101,7 @@ public class ElasticsearchClient {
      */
     public void deleteById(final String index, final String type, final String id) {
 
-        LOG.debug("About to DELETE /{}/{}/{}", index, type, id);
+        LOG.debug("DELETE /{}/{}/{}", index, type, id);
         try {
             transportClient
                     .prepareDelete(index, type, id)
@@ -110,7 +118,7 @@ public class ElasticsearchClient {
         Preconditions.checkNotNull(id, "id cannot be null");
         Preconditions.checkNotNull(json, "json cannot be null");
 
-        LOG.debug("About to PUT /{}/{}/{}", index, type, id);
+        LOG.debug("PUT /{}/{}/{}", index, type, id);
         return transportClient
                 .prepareIndex(index, type, id)
                 .setSource(json, XContentType.JSON)
@@ -123,7 +131,7 @@ public class ElasticsearchClient {
         Preconditions.checkNotNull(id, "id cannot be null");
         Preconditions.checkNotNull(json, "json cannot be null");
 
-        LOG.debug("About to PUT /{}/{}/{}", index, type, id);
+        LOG.debug("PUT /{}/{}/{}", index, type, id);
         transportClient
                 .prepareUpdate(index, type, id)
                 .setDoc(json, XContentType.JSON)
@@ -153,7 +161,7 @@ public class ElasticsearchClient {
      */
     public Optional<SearchResponse> getAll(final String index, final String type, final Integer from, final Integer size, final QueryBuilder queryBuilder, final List<SortBuilder> sortBuilders) {
 
-        LOG.debug("About to search /{}/{} , filters: {}", index, type, queryBuilder);
+        LOG.debug("search /{}/{} , filters: {}", index, type, queryBuilder);
 
         // Build search
         final SearchRequestBuilder searchRequestBuilder = transportClient

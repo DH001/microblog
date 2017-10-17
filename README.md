@@ -1,4 +1,4 @@
-ForgeRock Backstage Backend Developer Technical Assessment
+Microblog
 ----------------------------------------------------------
 
 This is a simple microblogging REST service for the ForgeRock technical assessment. 
